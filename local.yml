@@ -12,10 +12,14 @@ services:
     depends_on:
       - postgres
       - mailhog
+    links:
+      - postgres
+      - mailhog
     volumes:
       - .:/app
     environment:
-      - POSTGRES_USER=ask
+      - POSTGRES_USER=$POSTGRES_USER
+      - DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_USER
       - USE_DOCKER=yes
     ports:
       - "8000:8000"
