@@ -47,10 +47,13 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     'crispy_forms',  # Form layouts
+    'taggit', # Handles tagging models
+    'markdownx', # Markdown features
 ]
 
 # Apps specific for this project go here.
 LOCAL_APPS = [
+    'qanda',
     # custom users app
     #'ask.users.apps.UsersConfig',
     # Your stuff: custom apps go here
@@ -120,7 +123,7 @@ DATABASES['default']['ATOMIC_REQUESTS'] = True
 TIME_ZONE = 'UTC'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#language-code
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-gb'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
@@ -273,3 +276,5 @@ ADMIN_URL = r'^admin/'
 
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
+
+TAGGIT_CASE_INSENSITIVE = True

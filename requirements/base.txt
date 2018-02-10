@@ -32,3 +32,5 @@ sqlparse==0.2.4
 Unidecode==0.4.21
 urllib3==1.22
 argon2-cffi>=16.1.0
+django-taggit==0.22.2
+django-markdownx

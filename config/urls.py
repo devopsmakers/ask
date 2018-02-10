@@ -19,11 +19,12 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from django.views import defaults as default_views
-
+from markdownx import urls as markdownx
 
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, admin.site.urls),
+    url(r'^markdownx/', include(markdownx)),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
