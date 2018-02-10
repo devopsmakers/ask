@@ -31,5 +31,4 @@ six==1.11.0
 sqlparse==0.2.4
 Unidecode==0.4.21
 urllib3==1.22
-
-django[argon2]
+argon2-cffi>=16.1.0

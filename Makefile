@@ -3,6 +3,10 @@ COMPOSE_FILE      ?= local.yml
 export POSTGRES_USER     ?= ask
 export POSTGRES_PASSWORD ?= ''
 
+.PHONY: build
+build:
+	docker-compose -f ${COMPOSE_FILE} build --force-rm  --pull --no-cache
+
 .PHONY: up
 up:
 	docker-compose -f ${COMPOSE_FILE} up
