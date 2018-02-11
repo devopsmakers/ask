@@ -49,6 +49,7 @@ THIRD_PARTY_APPS = [
     'crispy_forms',  # Form layouts
     'taggit', # Handles tagging models
     'markdownx', # Markdown features
+    'reversion', # Enterprise-y versioning for Document(s)
 ]
 
 # Apps specific for this project go here.
@@ -70,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'reversion.middleware.RevisionMiddleware',
 ]
 
 # MIGRATIONS CONFIGURATION

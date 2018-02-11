@@ -33,4 +33,5 @@ Unidecode==0.4.21
 urllib3==1.22
 argon2-cffi>=16.1.0
 django-taggit==0.22.2
-django-markdownx
+django-markdownx==2.0.22
+django-reversion==2.0.13
