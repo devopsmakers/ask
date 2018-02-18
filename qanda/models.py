@@ -8,6 +8,15 @@ import reversion
 # Create your models here.
 
 # Question
+class QuestionManager(models.Manager):
+    use_for_related_models = True
+
+    def answered(self, **kwargs):
+        return self.filter(answered=True, **kwargs)
+
+    def unanswered(self, **kwargs):
+        return self.filter(answered=False, **kwargs)
+
 class Question(models.Model):
     """Questions are what they are... or are they?"""
     slug = models.SlugField(max_length=50, blank=True)
@@ -24,6 +33,8 @@ class Question(models.Model):
     positive_votes = models.IntegerField(default=0)
     negative_votes = models.IntegerField(default=0)
     answered = models.BooleanField(default=False)
+
+    objects = QuestionManager()
 
     def __str__(self):
         return self.title

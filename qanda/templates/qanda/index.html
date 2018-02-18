@@ -1,0 +1,10 @@
+{% extends "qanda/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block content %}
+  {% crispy form %}
+  <script type="text/javascript">
+    var urlParams = new URLSearchParams(window.location.search);
+    document.getElementById('id_search').value = urlParams.get('search');
+  </script>
+{% endblock content %}

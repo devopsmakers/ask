@@ -20,11 +20,13 @@ from django.contrib import admin
 from django.urls import path
 from django.views import defaults as default_views
 from markdownx import urls as markdownx
+from qanda import urls as qanda
 
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, admin.site.urls),
     url(r'^markdownx/', include(markdownx)),
+    url(r'^', include(qanda)),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

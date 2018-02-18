@@ -181,7 +181,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # STATIC FILE CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-STATIC_ROOT = str(ROOT_DIR('staticfiles'))
+STATIC_ROOT = str(ROOT_DIR('static'))
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
@@ -280,3 +280,9 @@ ADMIN_URL = r'^admin/'
 # ------------------------------------------------------------------------------
 
 TAGGIT_CASE_INSENSITIVE = True
+
+QANDA_SETTINGS = {
+    'messages': True,
+    'organization': 'ITV',
+    'logo': 'images/ITV-logo.png',
+}
