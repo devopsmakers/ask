@@ -1,6 +1,6 @@
 {% load staticfiles %}
 {% load cache %}
-{% load question_tags %}
+{% load qanda_tags %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -35,7 +35,7 @@
             <a class="nav-link" href="/">Search <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item{% if nav == 'unanswered' %} active{% endif %}">
-            <a class="nav-link" href="/unanswered">Unanswered{% unanswered_badge %}</a>
+            <a class="nav-link" href="/unanswered">Unanswered{% count_badge unanswered_count %}</a>
           <li class="nav-item">
             <a class="nav-link disabled" href="/login">Login</a>
           </li>
@@ -49,11 +49,13 @@
           <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
         {% endfor %}
       {% endif %}
-      {% block content %}
+      {% block content %}{% endblock content %}
+    </div>
+    <footer class="footer">
+      <div class="container">
 
-      {% endblock content %}
-     </div>
-
+      </div>
+    </footer>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
