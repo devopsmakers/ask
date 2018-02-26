@@ -3,6 +3,7 @@ version: '2'
 volumes:
   postgres_data_local: {}
   postgres_backup_local: {}
+  elasticsearch_data_local: {}
 
 services:
   django: &django
@@ -12,9 +13,11 @@ services:
     depends_on:
       - postgres
       - mailhog
+      - elasticsearch
     links:
       - postgres
       - mailhog
+      - elasticsearch
     volumes:
       - .:/app
     environment:
@@ -35,11 +38,19 @@ services:
     environment:
       - POSTGRES_USER=ask
 
+  elasticsearch:
+    image: elasticsearch:2-alpine
+    volumes:
+      - elasticsearch_data_local:/usr/share/elasticsearch/data
+    environment:
+      - discovery.zen.minimum_master_nodes=1
+    ports:
+      - "9200:9200"
+
   mailhog:
     image: mailhog/mailhog:v1.0.0
     ports:
       - "8025:8025"
-
 
   redis:
     image: redis:3.0

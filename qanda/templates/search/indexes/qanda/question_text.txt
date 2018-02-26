@@ -1,0 +1,8 @@
+{% load qanda_tags %}{% filter textify %}
+{{ object.title }}
+{{ object.content }}
+{% for tag in object.tag_list %}
+{{ tag }}
+{% endfor %}
+{{ object.user }}
+{% endfilter %}

@@ -50,6 +50,7 @@ THIRD_PARTY_APPS = [
     'taggit', # Handles tagging models
     'markdownx', # Markdown features
     'reversion', # Enterprise-y versioning for Document(s)
+    'haystack', # Search-y stuff
 ]
 
 # Apps specific for this project go here.
@@ -112,9 +113,18 @@ MANAGERS = ADMINS
 # Uses django-environ to accept uri format
 # See: https://django-environ.readthedocs.io/en/latest/#supported-types
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres:///ask'),
+    'default': env.db_url('DATABASE_URL', default='postgres:///ask'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
+
+# SEARCH CONFIGURATION
+# ------------------------------------------------------------------------------
+# See: https://django-haystack.readthedocs.io/en/master/tutorial.html#configuration
+# Uses django-environ to accept uri format
+# See: https://django-environ.readthedocs.io/en/latest/#supported-types
+HAYSTACK_CONNECTIONS = {
+    'default': env.search_url('SEARCH_URL', default='elasticsearch2://elasticsearch:9200/haystack'),
+}
 
 # GENERAL CONFIGURATION
 # ------------------------------------------------------------------------------

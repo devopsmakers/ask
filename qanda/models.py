@@ -39,6 +39,9 @@ class Question(models.Model):
     def __str__(self):
         return self.title
 
+    def tag_list(self):
+        return [tag.name for tag in self.tags.all()]
+
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.title)
@@ -69,6 +72,7 @@ class Answer(models.Model):
         return self.content
 
     class Meta:
+        unique_together = (('question', 'accepted'),)
         ordering = ['-accepted', '-pub_date']
 
 
@@ -80,6 +84,9 @@ class Topic(models.Model):
 
     def __str__(self):  # pragma: no cover
         return self.title
+
+    def _tags(self):
+        return [tag.name for tag in self.tags.all()]
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -108,6 +115,9 @@ class Document(models.Model):
 
     def __str__(self):  # pragma: no cover
         return self.title
+
+    def _tags(self):
+        return [tag.name for tag in self.tags.all()]
 
     def save(self, *args, **kwargs):
         if not self.id:
