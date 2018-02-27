@@ -4,8 +4,9 @@ from markdownx.utils import markdownify
 from bs4 import BeautifulSoup
 register = template.Library()
 
+
 @register.simple_tag
-def count_badge(count=0, false_colour='info', true_colour='danger' ):
+def count_badge(count=0, false_colour='info', true_colour='danger'):
     badge_colour = false_colour
     if count > 0:
         badge_colour = true_colour
@@ -14,6 +15,7 @@ def count_badge(count=0, false_colour='info', true_colour='danger' ):
         '&nbsp;<sup><span class="badge badge-pill badge-{}">{}</span></sup>',
         badge_colour,
         count)
+
 
 @register.filter
 def textify(data):

@@ -3,14 +3,15 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
 from crispy_forms.bootstrap import AppendedText, FieldWithButtons, StrictButton
 
+
 # SearchForm
 class SearchForm(forms.Form):
     """ The form for search """
     search = forms.CharField(label="Search", required=True,
-            widget=forms.TextInput(attrs={
-                'placeholder': 'Ask a question...',
-                'onclick': 'this.select();',
-                'onmouseup': 'return false;'}))
+                             widget=forms.TextInput(attrs={
+                                 'placeholder': 'Ask a question...',
+                                 'onclick': 'this.select();',
+                                 'onmouseup': 'return false;'}))
 
     def __init__(self, *args, **kwargs):
         super(SearchForm, self).__init__(*args, **kwargs)

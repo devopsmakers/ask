@@ -16,16 +16,19 @@ if qa_messages:
     from django.contrib import messages
 
 # Create your views here.
+
+
 # QandaBaseView
 class QandaBaseView(View):
     def get_context_data(self, **kwargs):
         context = super(QandaBaseView, self).get_context_data(**kwargs)
         context['ORGANIZATION_NAME'] = settings.QANDA_SETTINGS.get(
             'organization', '')
-        context['LOGO'] =  settings.QANDA_SETTINGS.get(
+        context['LOGO'] = settings.QANDA_SETTINGS.get(
             'logo', False)
         context['unanswered_count'] = Question.objects.unanswered().count()
         return context
+
 
 # SearchView
 class SearchView(QandaBaseView, FormView):

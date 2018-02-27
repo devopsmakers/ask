@@ -7,6 +7,7 @@ import reversion
 
 # Create your models here.
 
+
 # Question
 class QuestionManager(models.Manager):
     use_for_related_models = True
@@ -16,6 +17,7 @@ class QuestionManager(models.Manager):
 
     def unanswered(self, **kwargs):
         return self.filter(answered=False, **kwargs)
+
 
 class Question(models.Model):
     """Questions are what they are... or are they?"""
@@ -43,37 +45,8 @@ class Question(models.Model):
         return [tag.name for tag in self.tags.all()]
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            self.slug = slugify(self.title)
+        self.slug = slugify(self.title)
         super(Question, self).save(*args, **kwargs)
-
-
-# Answer
-class Answer(models.Model):
-    """Answers belong to a question."""
-    question = models.ForeignKey(
-        Question,
-        on_delete=models.CASCADE,
-    )
-    content = MarkdownxField();
-    pub_date = models.DateTimeField('date published', auto_now_add=True)
-    updated = models.DateTimeField('date updated', auto_now=True)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-    accepted = models.BooleanField(default=False)
-    positive_votes = models.IntegerField(default=0)
-    negative_votes = models.IntegerField(default=0)
-
-    def __str__(self):  # pragma: no cover
-        return self.content
-
-    class Meta:
-        unique_together = (('question', 'accepted'),)
-        ordering = ['-accepted', '-pub_date']
 
 
 # Topic
@@ -85,7 +58,7 @@ class Topic(models.Model):
     def __str__(self):  # pragma: no cover
         return self.title
 
-    def _tags(self):
+    def tag_list(self):
         return [tag.name for tag in self.tags.all()]
 
     def save(self, *args, **kwargs):
@@ -108,6 +81,12 @@ class Document(models.Model):
         blank=True,
         null=True,
     )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
     pub_date = models.DateTimeField('date published', auto_now_add=True)
     updated = models.DateTimeField('date updated', auto_now=True)
     positive_votes = models.IntegerField(default=0)
@@ -116,13 +95,42 @@ class Document(models.Model):
     def __str__(self):  # pragma: no cover
         return self.title
 
-    def _tags(self):
+    def tag_list(self):
         return [tag.name for tag in self.tags.all()]
 
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.title)
         super(Document, self).save(*args, **kwargs)
+
+
+# Answer
+class Answer(models.Model):
+    """Answers belong to a question."""
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.CASCADE,
+    )
+    content = MarkdownxField()
+    documents = models.ManyToManyField(Document)
+    pub_date = models.DateTimeField('date published', auto_now_add=True)
+    updated = models.DateTimeField('date updated', auto_now=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    accepted = models.BooleanField(default=False)
+    positive_votes = models.IntegerField(default=0)
+    negative_votes = models.IntegerField(default=0)
+
+    def __str__(self):  # pragma: no cover
+        return self.content
+
+    class Meta:
+        unique_together = (('question', 'accepted'),)
+        ordering = ['-accepted', '-pub_date']
 
 
 # Vote
@@ -215,6 +223,7 @@ class AnswerComment(Comment):
         Answer,
         on_delete=models.CASCADE,
     )
+
 
 # DocumentComment
 class DocumentComment(Comment):

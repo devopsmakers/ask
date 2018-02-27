@@ -23,3 +23,7 @@ manage.py:
 .PHONY: bash
 bash:
 	docker-compose -f ${COMPOSE_FILE} exec $(SERVICE) bash
+
+.PHONY: pep8
+pep8:
+	pep8 --exclude=venv,migrations,config

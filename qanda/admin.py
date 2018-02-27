@@ -12,8 +12,10 @@ from reversion.admin import VersionAdmin
 class QuestionVoteInline(admin.TabularInline):
     model = QuestionVote
 
+
 class QuestionCommentInline(admin.TabularInline):
     model = QuestionComment
+
 
 @admin.register(Question)
 class QuestionAdmin(MarkdownxModelAdmin):
@@ -22,26 +24,33 @@ class QuestionAdmin(MarkdownxModelAdmin):
         QuestionCommentInline,
     ]
 
+
 # Answer related admin stuff
 class AnswerVoteInline(admin.TabularInline):
     model = AnswerVote
 
+
 class AnswerCommentInline(admin.TabularInline):
     model = AnswerComment
 
+
 @admin.register(Answer)
 class AnswerAdmin(MarkdownxModelAdmin):
+    filter_horizontal = ('documents',)
     inlines = [
         AnswerVoteInline,
         AnswerCommentInline,
     ]
 
+
 # Document related admin stuff
 class DocumentVoteInline(admin.TabularInline):
     model = DocumentVote
 
+
 class DocumentCommentInline(admin.TabularInline):
     model = DocumentComment
+
 
 @admin.register(Document)
 class DocumentAdmin(MarkdownxModelAdmin, VersionAdmin):
@@ -49,6 +58,7 @@ class DocumentAdmin(MarkdownxModelAdmin, VersionAdmin):
         DocumentVoteInline,
         DocumentCommentInline,
     ]
+
 
 # Topic related admin stuff
 @admin.register(Topic)

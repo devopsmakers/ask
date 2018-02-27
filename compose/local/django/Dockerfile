@@ -1,6 +1,12 @@
-FROM python:3.5
+FROM python:3.6
 
 ENV PYTHONUNBUFFERED 1
+
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" > \
+  /etc/apt/sources.list.d/pgdg.list \
+  && apt-get update \
+  && apt-get install postgresql-client-9.6 -y --force-yes \
+  && rm -rf /var/lib/apt/lists/*
 
 # Requirements have to be pulled and installed here, otherwise caching won't work
 COPY ./requirements /requirements
