@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from django.views.generic import FormView, View
+from django.views.generic import FormView, View, CreateView
 from django.conf import settings
-
-from .forms import SearchForm
-from .models import Question
+from django.utils.translation import ugettext as _
+from django.urls import reverse
+from .forms import SearchForm, QuestionForm, DocumentForm
+from .models import Question, Document
 
 try:
     qa_messages = 'django.contrib.messages' in settings.INSTALLED_APPS and \
@@ -46,7 +47,29 @@ class SearchView(QandaBaseView, FormView):
 
 # QuestionDetailView
 
+
 # NewQuestionView
+class NewQuestionView(QandaBaseView, CreateView):
+    """
+    Create a question
+    """
+    template_name = 'qanda/create_form.html'
+    message = _('Thank you! your question has been created.')
+    form_class = QuestionForm
+
+    def form_valid(self, form):
+        """
+        Create the required relation
+        """
+        form.instance.user = self.request.user
+        return super(NewQuestionView, self).form_valid(form)
+
+    def get_success_url(self):
+        if qa_messages:
+            messages.success(self.request, self.message)
+
+        return reverse('qanda_index')
+
 
 # EditQuestionView
 
@@ -63,6 +86,26 @@ class SearchView(QandaBaseView, FormView):
 # EditCommentOnAnswerView
 
 # NewDocumentView
+class NewDocumentView(QandaBaseView, CreateView):
+    """
+    Create a document
+    """
+    template_name = 'qanda/create_form.html'
+    message = _('Thank you! your document has been created.')
+    form_class = DocumentForm
+
+    def form_valid(self, form):
+        """
+        Create the required relation
+        """
+        form.instance.user = self.request.user
+        return super(NewDocumentView, self).form_valid(form)
+
+    def get_success_url(self):
+        if qa_messages:
+            messages.success(self.request, self.message)
+
+        return reverse('qanda_index')
 
 # EditDocumentView
 
