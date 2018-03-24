@@ -19,13 +19,27 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from django.views import defaults as default_views
+from django.contrib.auth import views as auth_views
+from django.conf import settings
+
 from markdownx import urls as markdownx
 from qanda import urls as qanda
 
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
+    url(r'^login/$', auth_views.login,
+        kwargs={ 'extra_context':{
+            'ORGANIZATION_NAME': settings.ORG_SETTINGS.get(
+                'organization', ''),
+            'LOGO': settings.ORG_SETTINGS.get(
+                'logo', False),
+        }}, name='login'),
+    url(r'^logout/$', auth_views.logout, kwargs={'next_page': '/'},
+        name='logout'),
+
     url(settings.ADMIN_URL, admin.site.urls),
     url(r'^markdownx/', include(markdownx)),
+    url(r'^taggit/', include('taggit_bootstrap.urls')),
     url(r'^', include(qanda)),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

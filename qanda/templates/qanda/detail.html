@@ -1,0 +1,26 @@
+{% extends "qanda/base.html" %}
+{% load staticfiles %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <a href="{{ object.get_absolute_url }}"><h3>{{ object.title }}</h3></a>
+  </div>
+  <div class="card-body">
+    {{ view.html_content | safe }}
+  </div>
+  <div class="card-footer text-muted text-right">
+    {% if object.teaser %}
+    <small>Last updated: {{ object.updated }} by {{ object.user_email }}</small>
+    {% else %}
+    <small>Asked on: {{ object.pub_date }} by {{ object.user_email }}</small>
+    {% endif %}
+  </div>
+</div>
+{% if not object.answered and not object.teaser %}
+<div>
+  Know someone who can answer this <a href="{{ object.get_absolute_url }}">question</a>?
+</div>
+{% endif %}
+
+
+{% endblock content %}

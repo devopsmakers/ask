@@ -26,3 +26,8 @@ def textify(data):
         html_data, "html.parser").findAll(text=True))
 
     return ' '.join(text_data.replace('\n', ' ').replace('\r', '').split())
+
+
+@register.filter
+def form_model(form):
+    return form._meta.model.__name__

@@ -1,5 +1,6 @@
 {% load qanda_tags %}{% filter textify %}
 {{ object.title }}
+{{ object.teaser }}
 {{ object.content }}
 {% for tag in object.tag_list %}
 {{ tag }}

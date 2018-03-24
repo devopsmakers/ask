@@ -1,10 +1,56 @@
 {% extends "qanda/base.html" %}
 {% load staticfiles %}
-{% load crispy_forms_tags %}
 {% block content %}
-  {% crispy form %}
-  <script type="text/javascript">
-    var urlParams = new URLSearchParams(window.location.search);
-    document.getElementById('id_search').value = urlParams.get('search');
-  </script>
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-4">Ask {{ ORGANIZATION_NAME }}</h1>
+      <p class="lead">
+        A place to find answers, ask questions and help others.
+      </p>
+      <hr class="my-2">
+      <p>With your help, we're working together to build a library of detailed answers to every question about {{ ORGANIZATION_NAME }}.</p>
+      <p class="lead">
+        <a class="btn btn-primary btn-lg" href="{% url 'qanda_help' %}" role="button">Learn more</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <h3>Popular Documents</h3>
+      {% for document in view.voted_documents %}
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><a href="{{ document.get_absolute_url }}" >{{ document.title }}</a></h5>
+          <p class="card-text">{{ document.teaser | truncatechars_html:120 }}</p>
+          <p class="card-text text-right"><small class="text-muted">Last updated: {{ document.updated }} by {{ document.user_email }}</small></p>
+        </div>
+      </div>
+      {% empty %}
+      <div class="alert alert-dark" role="alert">
+        There are no documents yet.
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="col-sm">
+      <h3>Newest Questions</h3>
+      {% for question in view.newest_questions %}
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><a href="{{ question.get_absolute_url }}" >{{ question.title }}</a></h5>
+          <p class="card-text">{{ question.content | truncatechars_html:120 }}</p>
+          <p class="card-text text-right"><small class="text-muted">Asked on: {{ question.pub_date }} by {{ question.user_email }}</small></p>
+        </div>
+      </div>
+      {% empty %}
+      <div class="alert alert-dark" role="alert">
+        There are no questions yet.
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div>
+
+  </div>
 {% endblock content %}

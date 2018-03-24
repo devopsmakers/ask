@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.html import mark_safe
+from django.utils.html import mark_safe, escape
 
 class SimpleMarkdownEditor(forms.Widget):
     """
@@ -9,7 +9,7 @@ class SimpleMarkdownEditor(forms.Widget):
     def render(self, name, value, attrs=None, renderer=None):
 
         template = '''
-            <textarea name="%(name)s" id="id_%(name)s" required>%(value)s</textarea>
+            <textarea name="%(name)s" id="id_%(name)s">%(value)s</textarea>
             <script>
                 var simplemde = new SimpleMDE({
             		element: document.getElementById("id_%(name)s"),

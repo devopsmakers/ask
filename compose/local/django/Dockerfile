@@ -10,7 +10,8 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" > \
 
 # Requirements have to be pulled and installed here, otherwise caching won't work
 COPY ./requirements /requirements
-RUN pip install -r /requirements/local.txt
+RUN pip install --upgrade pip \
+  && pip install -r /requirements/local.txt
 
 COPY ./compose/production/django/entrypoint.sh /entrypoint.sh
 RUN sed -i 's/\r//' /entrypoint.sh

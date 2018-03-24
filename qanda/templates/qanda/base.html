@@ -9,11 +9,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous">
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script
+      src="http://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"></script>
 
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -39,16 +52,44 @@
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item{% if nav == 'search' %} active{% endif %}">
-            <a class="nav-link" href="/">Search <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="{% url 'qanda_index' %}">Search{% if nav == 'search' %} <span class="sr-only">(current)</span>{% endif %}</a>
           </li>
           <li class="nav-item{% if nav == 'unanswered' %} active{% endif %}">
-            <a class="nav-link" href="/unanswered">Unanswered{% count_badge unanswered_count %}</a>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="/login">Login</a>
+            <a class="nav-link" href="{% url 'qanda_unanswered' %}">Unanswered{% count_badge unanswered_count %}{% if nav == 'unanswered' %} <span class="sr-only">(current)</span>{% endif %}</a>
           </li>
+          <li class="nav-item{% if nav == 'help' %} active{% endif %}">
+            <a class="nav-link" href="{% url 'qanda_help' %}">Help{% if nav == 'help' %} <span class="sr-only">(current)</span>{% endif %}</a>
+          </li>
+          {% if not user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
+          </li>
+          {% else %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ user.get_username }}</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
+            </div>
+          </li>
+          {% endif %}
         </ul>
       </div>
     </nav>
+    <div class="container">
+      <form action="{% url 'qanda_search' %}" method="get" >
+        <div class="form-group" >
+          <div class="input-group">
+            <input type="text" name="q" placeholder="Ask a question..." onclick="this.select();" onmouseup="return false;" class="textinput textInput form-control" required id="id_q" />
+            <span class="input-group-btn"><button class="btn btn-primary" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button></span>
+          </div>
+        </div>
+      </form>
+      <script type="text/javascript">
+        var urlParams = new URLSearchParams(window.location.search);
+        document.getElementById('id_q').value = urlParams.get('q');
+      </script>
+    </div>
 
     <div class="container">
       {% if messages %}

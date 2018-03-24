@@ -51,6 +51,7 @@ THIRD_PARTY_APPS = [
     'markdownx', # Markdown features
     'reversion', # Enterprise-y versioning for Document(s)
     'haystack', # Search-y stuff
+    'taggit_bootstrap', # Bootstrap tags
 ]
 
 # Apps specific for this project go here.
@@ -125,6 +126,7 @@ DATABASES['default']['ATOMIC_REQUESTS'] = True
 HAYSTACK_CONNECTIONS = {
     'default': env.search_url('SEARCH_URL', default='elasticsearch2://elasticsearch:9200/haystack'),
 }
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 # GENERAL CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -272,8 +274,8 @@ AUTHENTICATION_BACKENDS = [
 ## Custom user app defaults
 ## Select the correct user model
 #AUTH_USER_MODEL = 'users.User'
-#LOGIN_REDIRECT_URL = 'users:redirect'
-#LOGIN_URL = 'account_login'
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
@@ -291,7 +293,7 @@ ADMIN_URL = r'^admin/'
 
 TAGGIT_CASE_INSENSITIVE = True
 
-QANDA_SETTINGS = {
+ORG_SETTINGS = {
     'messages': True,
     'organization': 'ITV',
     'logo': 'images/ITV-logo.png',
