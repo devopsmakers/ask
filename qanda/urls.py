@@ -12,6 +12,14 @@ urlpatterns = [
     url(r'^questions/ask/$', login_required(views.AskQuestionView.as_view()),
         name='qanda_ask_question'),
 
+    url(r'^questions/(?P<pk>[\d]+)/(?P<slug>[\w-]+)/update$',
+        login_required(views.UpdateQuestionView.as_view()),
+        name='qanda_update_question_view'),
+
+    url(r'^questions/(?P<pk>[\d]+)/(?P<slug>[\w-]+)/answer$',
+        login_required(views.QuestionView.as_view()),
+        name='qanda_question_answer_view'),
+
     url(r'^questions/(?P<pk>[\d]+)/(?P<slug>[\w-]+)/$',
         views.QuestionView.as_view(),
         name='qanda_question_view'),
@@ -21,7 +29,7 @@ urlpatterns = [
 
     url(r'^documents/(?P<pk>[\d]+)/(?P<slug>[\w-]+)/update$',
         login_required(views.UpdateDocumentView.as_view()),
-        name='qanda_document_update'),
+        name='qanda_update_document_update'),
 
     url(r'^documents/(?P<pk>[\d]+)/(?P<slug>[\w-]+)/$',
         views.DocumentView.as_view(),

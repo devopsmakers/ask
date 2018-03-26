@@ -76,27 +76,8 @@
         </ul>
       </div>
     </nav>
-    <div class="container">
-      <form action="{% url 'qanda_search' %}" method="get" >
-        <div class="form-group" >
-          <div class="input-group">
-            <input type="text" name="q" placeholder="Ask a question..." onclick="this.select();" onmouseup="return false;" class="textinput textInput form-control" required id="id_q" />
-            <span class="input-group-btn"><button class="btn btn-primary" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button></span>
-          </div>
-        </div>
-      </form>
-      <script type="text/javascript">
-        var urlParams = new URLSearchParams(window.location.search);
-        document.getElementById('id_q').value = urlParams.get('q');
-      </script>
-    </div>
 
     <div class="container">
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
       {% block content %}{% endblock content %}
     </div>
     <footer class="footer">

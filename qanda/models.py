@@ -96,7 +96,7 @@ class Document(models.Model):
     title = models.CharField(max_length=200, blank=False, unique=True)
     teaser = models.CharField(max_length=240, blank=False,
                               help_text="A short description of this document")
-    content = MarkdownxField()
+    content = MarkdownxField(verbose_name="Document Content")
     tags = TaggableManager(blank=True)
     topic = models.ForeignKey(
         Topic,
@@ -146,8 +146,11 @@ class Answer(models.Model):
         Question,
         on_delete=models.CASCADE,
     )
-    content = MarkdownxField()
-    documents = models.ManyToManyField(Document)
+    content = MarkdownxField(verbose_name="Your Answer")
+    documents = models.ManyToManyField(Document, blank=True,
+                verbose_name='Related Documents',
+                help_text='Press and hold Ctrl or Cmd to select multiple '\
+                'options and unselect options.')
     pub_date = models.DateTimeField('date published', auto_now_add=True)
     updated = models.DateTimeField('date updated', auto_now=True)
     user = models.ForeignKey(
@@ -160,11 +163,18 @@ class Answer(models.Model):
     positive_votes = models.IntegerField(default=0)
     negative_votes = models.IntegerField(default=0)
 
+    @property
+    def html_content(self):
+        return markdownify(self.content)
+
+    @property
+    def user_email(self):
+        return "%s <%s>" % (self.user, self.user.email)
+
     def __str__(self):  # pragma: no cover
         return self.content
 
     class Meta:
-        unique_together = (('question', 'accepted'),)
         ordering = ['-accepted', '-pub_date']
 
 

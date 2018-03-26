@@ -13,24 +13,21 @@ from haystack.generic_views import SearchView
 from haystack.query import SearchQuerySet, SQ
 from haystack.inputs import AutoQuery, Exact, Clean, Raw
 
-from .forms import QuestionForm, DocumentForm, EmptySearchForm
-from .models import Question, QuestionManager, Document
+from .forms import QuestionForm, DocumentForm, EmptySearchForm, AnswerForm
+from .models import Question, QuestionManager, Document, Answer
 from .utils import strip_stop_words
 
 logger = logging.getLogger(__name__)
 
 try:
-    qa_messages = 'django.contrib.messages' in settings.INSTALLED_APPS and \
+    qanda_messages = 'django.contrib.messages' in settings.INSTALLED_APPS and \
         settings.ORG_SETTINGS['messages']
 
 except AttributeError:  # pragma: no cover
-    qa_messages = False
+    qanda_messages = False
 
-if qa_messages:
+if qanda_messages:
     from django.contrib import messages
-
-# Create your views here.
-
 
 # QandaBaseView
 class QandaBaseView(View):
@@ -132,12 +129,29 @@ class UnansweredView(QandaBaseView, ListView):
 
 
 # QuestionView
-class QuestionView(QandaBaseView, DetailView):
+class QuestionView(QandaBaseView, DetailView, CreateView):
     model = Question
+    message = _('Thank you! Your answer has been created.')
     template_name = 'qanda/detail.html'
+    form_class = AnswerForm
+
 
     def html_content(self):
         return self.object.html_content
+
+    def get_queryset(self):
+        queryset = super(QuestionView, self).get_queryset()
+        return queryset.prefetch_related('answer_set').prefetch_related(
+            'answer_set__documents',
+            'answer_set__user')
+
+    def form_valid(self, form):
+        """
+        Create the required relation
+        """
+        form.instance.user = self.request.user
+        form.instance.question = self.get_object()
+        return super().form_valid(form)
 
     def get(self, request, **kwargs):
         self.object = self.get_object()
@@ -147,13 +161,20 @@ class QuestionView(QandaBaseView, DetailView):
             context = self.get_context_data(object=self.object)
             return self.render_to_response(context)
 
+    def get_success_url(self):
+        if qanda_messages:
+            messages.success(self.request, self.message)
+        question = self.get_object()
+        return reverse('qanda_question_view',
+                       kwargs={'pk': question.pk, 'slug': question.slug})
+
 # AskQuestionView
 class AskQuestionView(QandaBaseView, CreateView):
     """
     Create a question
     """
     template_name = 'qanda/create_form.html'
-    message = _('Thank you! your question has been created.')
+    message = _('Thank you! Your question has been created.')
     form_class = QuestionForm
 
     def form_valid(self, form):
@@ -164,13 +185,34 @@ class AskQuestionView(QandaBaseView, CreateView):
         return super(AskQuestionView, self).form_valid(form)
 
     def get_success_url(self):
-        if qa_messages:
+        if qanda_messages:
             messages.success(self.request, self.message)
-
         return reverse('qanda_index')
 
+# UpdateQuestionView
+class UpdateQuestionView(QandaBaseView, UpdateView):
+    """
+    Update a question
+    """
+    template_name = 'qanda/update_form.html'
+    message = _('Thank you! your question has been updated.')
+    form_class = QuestionForm
+    model = Question
+    pk_url_kwarg = 'pk'
 
-# EditQuestionView
+    def form_valid(self, form):
+        """
+        Create the required relation
+        """
+        form.instance.user = self.request.user
+        return super(UpdateQuestionView, self).form_valid(form)
+
+    def get_success_url(self):
+        if qanda_messages:
+            messages.success(self.request, self.message)
+        question = self.get_object()
+        return reverse('qanda_question_view',
+                       kwargs={'pk': question.pk, 'slug': question.slug})
 
 # NewCommentOnQuestionView
 
@@ -217,7 +259,7 @@ class CreateDocumentView(QandaBaseView, CreateView):
         return super(CreateDocumentView, self).form_valid(form)
 
     def get_success_url(self):
-        if qa_messages:
+        if qanda_messages:
             messages.success(self.request, self.message)
 
         return reverse('qanda_index')
@@ -227,7 +269,7 @@ class UpdateDocumentView(QandaBaseView, UpdateView):
     """
     Update a document
     """
-    template_name = 'qanda/create_form.html'
+    template_name = 'qanda/update_form.html'
     message = _('Thank you! your document has been updated.')
     form_class = DocumentForm
     model = Document
@@ -241,7 +283,7 @@ class UpdateDocumentView(QandaBaseView, UpdateView):
         return super(UpdateDocumentView, self).form_valid(form)
 
     def get_success_url(self):
-        if qa_messages:
+        if qanda_messages:
             messages.success(self.request, self.message)
         document = self.get_object()
         return reverse('qanda_document_view',

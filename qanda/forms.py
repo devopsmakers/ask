@@ -7,7 +7,7 @@ from taggit_bootstrap import TagsInput
 
 from haystack.forms import ModelSearchForm
 
-from .models import Question, Document
+from .models import Question, Document, Answer
 from .widgets import SimpleMarkdownEditor
 
 # EmptySearchForm
@@ -30,6 +30,21 @@ class QuestionForm(forms.ModelForm):
         self.helper = FormHelper(self)
         self.helper.form_method = 'POST'
         self.helper.add_input(Submit('submit', 'Ask'))
+
+# AnswerForm
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = ['content', 'documents']
+
+    def __init__(self, *args, **kwargs):
+        super(AnswerForm, self).__init__(*args, **kwargs)
+        self.initial['pub_date'] = None
+        self.initial['content'] = None
+        self.fields['content'].widget = SimpleMarkdownEditor()
+        self.helper = FormHelper(self)
+        self.helper.form_method = 'POST'
+        self.helper.add_input(Submit('submit', 'Answer'))
 
 
 # DocumentForm

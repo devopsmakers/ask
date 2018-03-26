@@ -1,9 +1,13 @@
 {% extends "qanda/base.html" %}
 {% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load qanda_tags %}
 {% block content %}
+{% include "qanda/search_form.html" %}
+{% include "qanda/messages.html" %}
 <div class="card">
   <div class="card-header">
-    <a href="{{ object.get_absolute_url }}"><h3>{{ object.title }}</h3></a>
+    <h4><a href="{{ object.get_absolute_url }}" class="text-muted">{{ object.title }}</a></h4>
   </div>
   <div class="card-body">
     {{ view.html_content | safe }}
@@ -16,11 +20,52 @@
     {% endif %}
   </div>
 </div>
-{% if not object.answered and not object.teaser %}
-<div>
-  Know someone who can answer this <a href="{{ object.get_absolute_url }}">question</a>?
-</div>
+{% if not object.teaser %}
+  <hr />
+  <h4>{{ object.answer_set.count }} Answer{{ object.answer_set.count|pluralize:"s" }}</h4>
+  {% for answer in object.answer_set.all %}
+  <div class="card">
+    {% if answer.accepted %}
+    <div class="card-header">
+      <h5 class="text-success"><i class="fa fa-check" aria-hidden="true"></i> Accepted</h5>
+    </div>
+    {% endif %}
+    <div class="card-body">
+    {{ answer.html_content | safe }}
+    </div>
+    <div class="card-footer text-muted d-flex justify-content-between">
+      <div>
+        {% for document in answer.documents.all %}
+        <a href="{% url 'qanda_document_view' pk=document.pk slug=document.slug %}"><i class="fa fa-paperclip" aria-hidden="true"></i>{{ document }}</a>
+        {% endfor %}
+      </div>
+      <div>
+        <small>Answered on: {{ answer.pub_date }} by {{ answer.user_email }}</small>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% if not object.answered %}
+    <div>
+      Know someone who can answer this <a href="{{ object.get_absolute_url }}">question</a>?
+    </div>
+    <br />
+    {% if user.is_authenticated %}
+    <div >
+      <h2>Can you help?</h2>
+      {% crispy form %}
+    </div>
+    {% else %}
+      {% if object.answer_set.count == 0 %}
+      <div class="alert alert-primary" role="alert">
+        It looks like we don't have an answer yet. <a href="{% url 'qanda_question_answer_view' pk=object.pk slug=object.slug %}">Can you help?</a>
+      </div>
+      {% else %}
+      <div class="alert alert-primary" role="alert">
+        Is there a better answer to this question? <a href="{% url 'qanda_question_answer_view' pk=object.pk slug=object.slug %}">Can you help?</a>
+      </div>
+      {% endif %}
+    {% endif %}
+  {% endif %}
 {% endif %}
-
-
 {% endblock content %}

@@ -1,0 +1,8 @@
+{% extends "qanda/base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load qanda_tags %}
+{% block content %}
+  <h1>Update {{ form|form_model }}</h1>
+  {% crispy form %}
+{% endblock content %}

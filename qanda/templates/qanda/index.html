@@ -1,6 +1,7 @@
 {% extends "qanda/base.html" %}
 {% load staticfiles %}
 {% block content %}
+  {% include "qanda/search_form.html" %}
   <div class="jumbotron">
     <div class="container">
       <h1 class="display-4">Ask {{ ORGANIZATION_NAME }}</h1>
@@ -14,6 +15,7 @@
       </p>
     </div>
   </div>
+  {% include "qanda/messages.html" %} 
 
   <div class="row">
     <div class="col-sm-6">

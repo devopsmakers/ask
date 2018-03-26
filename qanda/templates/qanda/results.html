@@ -1,6 +1,7 @@
 {% extends "qanda/base.html" %}
 {% load staticfiles %}
 {% block content %}
+{% include "qanda/search_form.html" %}
 {% if not documents_list and not questions_list %}
 <div class="alert alert-primary" role="alert">
   It looks like we don't have an answer yet. <a href="{% url 'qanda_ask_question' %}">Ask a new question for others to help answer.</a>
@@ -25,7 +26,7 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title"><a href="{{ question.get_absolute_url }}" >{{ question.title }}</a></h5>
-        <p class="card-text">{{ question.content | truncatechars_html:240 }}</p>
+        <p class="card-text">{{ question.model_content | truncatechars_html:240 }}</p>
         <p class="card-text text-right"><small class="text-muted">Asked on: {{ question.pub_date }} by {{ question.user_email }}</small></p>
       </div>
     </div>
