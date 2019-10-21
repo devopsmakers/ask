@@ -38,4 +38,4 @@ django-reversion==2.0.13
 beautifulsoup4==4.4.0
 git+git://github.com/timbirk/django-taggit-bootstrap
 git+git://github.com/timbirk/django-haystack
-nltk==3.2.5
+nltk==3.4.5
